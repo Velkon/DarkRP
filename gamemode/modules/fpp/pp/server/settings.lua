@@ -722,8 +722,13 @@ local function SetBuddy(ply, cmd, args)
 
 	ply.Buddies = ply.Buddies or {}
 	for k,v in pairs(args) do args[k] = tonumber(v) end
-	ply.Buddies[buddy] = {Physgun = util.tobool(args[2]), Gravgun = util.tobool(args[3]), Toolgun = util.tobool(args[4]), PlayerUse = util.tobool(args[5]), EntityDamage = util.tobool(args[6])}
-
+	local o = {Physgun = util.tobool(args[2]), Gravgun = util.tobool(args[3]), Toolgun = util.tobool(args[4]), PlayerUse = util.tobool(args[5]), EntityDamage = util.tobool(args[6])}
+	if ply.Buddies[buddy] then
+		if o[Physgun] == ply.Buddies[buddy][Physgun] and o[Gravgun] == ply.Buddies[buddy][Gravgun] and o[Toolgun] == ply.Buddies[buddy][Toolgun] and o[PlayerUse] == ply.Buddies[buddy][PlayerUse] and o[EntityDamage] == ply.Buddies[buddy][EntityDamage] then
+			return
+		end
+	end
+	ply.Buddies[buddy] = o
 	local CPPIBuddies = {}
 	for k,v in pairs(ply.Buddies) do if table.HasValue(v, true) then table.insert(CPPIBuddies, k) end end
 	-- Also run at player spawn because clients send their buddies through this command
